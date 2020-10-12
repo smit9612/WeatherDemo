@@ -10,7 +10,7 @@ struct CityWeatherRowView: View {
 
     var body: some View {
         HStack {
-            Text("\(viewModel.id)")
+            Text("\(viewModel.name)")
                 .font(.title)
             Spacer()
             VStack(alignment: .leading) {

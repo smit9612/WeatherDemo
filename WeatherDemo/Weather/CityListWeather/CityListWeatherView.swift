@@ -17,19 +17,12 @@ struct CityListWeatherView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                forecastSection
-            }
-            .listStyle(GroupedListStyle())
-            .navigationBarTitle("Weather ⛅️")
-        }
-    }
-}
-
-extension CityListWeatherView {
-    var forecastSection: some View {
-        Section {
-            ForEach(viewModel.dataSource, content: CityWeatherRowView.init(viewModel:))
+            List(viewModel.dataSource) { rowviewModel in
+                NavigationLink(destination: viewModel.weeklyWeatherView(for: rowviewModel.name)) {
+                    CityWeatherRowView(viewModel: rowviewModel)
+                }
+            }.listStyle(GroupedListStyle())
+                .navigationBarTitle("Weather ⛅️")
         }
     }
 }

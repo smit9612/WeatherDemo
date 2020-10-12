@@ -3,26 +3,24 @@ import Combine
 import SwiftUI
 
 class WeeklyWeatherViewModel: ObservableObject {
-    @Published var city: String = ""
     @Published var dataSource: [DailyWeatherRowViewModel] = []
 
+    let city: String
     private let weatherFetcher: WeatherFetchable
     private var disposables = Set<AnyCancellable>()
 
     init(
+        city: String,
         weatherFetcher: WeatherFetchable,
-        scheduler: DispatchQueue = DispatchQueue(label: "WeatherViewModel")
+        scheduler _: DispatchQueue = DispatchQueue(label: "WeatherViewModel")
     ) {
         self.weatherFetcher = weatherFetcher
-        $city
-            .dropFirst(1)
-            .debounce(for: .seconds(0.5), scheduler: scheduler)
-            .sink(receiveValue: fetchWeather(forCity:))
-            .store(in: &disposables)
+        self.city = city
     }
 
-    func fetchWeather(forCity city: String) {
-        weatherFetcher.weeklyWeatherForecast(forCity: city)
+    func fetchWeather() {
+        weatherFetcher
+            .weeklyWeatherForecast(forCity: city)
             .map { response in
                 response.list.map(DailyWeatherRowViewModel.init)
             }

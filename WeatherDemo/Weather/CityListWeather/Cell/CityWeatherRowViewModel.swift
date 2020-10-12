@@ -7,7 +7,11 @@ struct CityWeatherRowViewModel: Identifiable {
     private let item: WeatherItem
 
     var id: String {
-        item.name
+        day + temperature + (item.name ?? title)
+    }
+
+    var name: String {
+        item.name ?? ""
     }
 
     var day: String {

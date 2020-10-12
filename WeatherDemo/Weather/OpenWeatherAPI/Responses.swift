@@ -21,7 +21,7 @@ struct NearbyCitiesForeCastResponse: Codable {
 struct WeatherItem: Codable {
     let date: Date
     let main: MainClass
-    let name: String
+    let name: String?
     let weather: [Weather]
 
     enum CodingKeys: String, CodingKey {

@@ -56,3 +56,9 @@ class CityListWeatherViewModel: ObservableObject {
             .store(in: &disposables)
     }
 }
+
+extension CityListWeatherViewModel {
+    func weeklyWeatherView(for city: String) -> some View {
+        WeeklyWeatherBuilder.makeWeeklyWeatherView(withCity: city, weatherFetcher: weatherFetcher)
+    }
+}
