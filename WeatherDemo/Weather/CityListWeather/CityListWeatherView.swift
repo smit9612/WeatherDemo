@@ -16,13 +16,40 @@ struct CityListWeatherView: View {
     }
 
     var body: some View {
-        NavigationView {
-            List(viewModel.dataSource) { rowviewModel in
-                NavigationLink(destination: viewModel.weeklyWeatherView(for: rowviewModel.name)) {
-                    CityWeatherRowView(viewModel: rowviewModel)
+        if viewModel.loading {
+            ProgressView("Loading...")
+                .scaleEffect(1.5, anchor: .center)
+                .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                .foregroundColor(.blue)
+        } else {
+            NavigationView {
+                List {
+                    lastUpdateSection
+                    cityListSection
+
+                }.listStyle(GroupedListStyle())
+                    .navigationBarTitle("Weather ⛅️")
+            }
+        }
+    }
+}
+
+private extension CityListWeatherView {
+    var cityListSection: some View {
+        Section {
+            ForEach(viewModel.dataSource) { rowViewModel in
+                NavigationLink(destination: viewModel.weeklyWeatherView(for: rowViewModel.name)) {
+                    CityWeatherRowView(viewModel: rowViewModel)
                 }
-            }.listStyle(GroupedListStyle())
-                .navigationBarTitle("Weather ⛅️")
+            }
+        }
+    }
+
+    var lastUpdateSection: some View {
+        Section {
+            VStack(alignment: .leading) {
+                Text("Last Update Weather at \(viewModel.lastUpdate)")
+            }
         }
     }
 }

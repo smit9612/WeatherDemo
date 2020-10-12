@@ -12,3 +12,10 @@ let monthFormatter: DateFormatter = {
     formatter.dateFormat = "MMMM"
     return formatter
 }()
+
+let timeFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMM-dd-yy HH:mm a"
+    dateFormatter.locale = Locale(identifier: "en-US")
+    return dateFormatter
+}()
