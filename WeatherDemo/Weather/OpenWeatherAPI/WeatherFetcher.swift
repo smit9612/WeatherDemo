@@ -66,7 +66,7 @@ extension WeatherFetcher: WeatherFetchable {
 
 private extension WeatherFetcher {
     struct OpenWeatherAPI {
-        static let scheme = "http"
+        static let scheme = "https"
         static let host = "api.openweathermap.org"
         static let path = "/data/2.5"
         static let key = "9bcbb3d4f0f94863415fa09665f1e71e"
