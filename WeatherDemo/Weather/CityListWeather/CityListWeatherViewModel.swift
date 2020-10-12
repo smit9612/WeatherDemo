@@ -13,7 +13,22 @@ import SwiftUI
 final class CityListWeatherViewModel: ObservableObject {
     @Published var dataSource: [CityWeatherRowViewModel] = []
     @Published var loading = false
-    @Published var lastUpdate: String = "Test LastUpdate"
+    @Published var lastUpdate: String = ""
+
+    @ObservedObject var locationManager = LocationManager()
+
+    var userLatitude: Double {
+        (locationManager.lastLocation?.coordinate.latitude ?? 0.0).round(to: 2)
+    }
+
+    var userLongitude: Double {
+        (locationManager.lastLocation?.coordinate.longitude ?? 0.0).round(to: 2)
+    }
+
+    var statusString: String {
+        locationManager.statusString
+    }
+
     private let weatherFetcher: WeatherFetchable
     private var disposables = Set<AnyCancellable>()
     let start = Date()

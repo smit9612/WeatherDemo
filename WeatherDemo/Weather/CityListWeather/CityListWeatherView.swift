@@ -24,6 +24,7 @@ struct CityListWeatherView: View {
         } else {
             NavigationView {
                 List {
+                    locationSection
                     lastUpdateSection
                     cityListSection
 
@@ -35,6 +36,18 @@ struct CityListWeatherView: View {
 }
 
 private extension CityListWeatherView {
+    var locationSection: some View {
+        Section {
+            VStack {
+                Text("location status: \(viewModel.locationManager.statusString)")
+                HStack {
+                    Text("latitude: \(viewModel.userLatitude)")
+                    Text("longitude: \(viewModel.userLongitude)")
+                }
+            }
+        }
+    }
+
     var cityListSection: some View {
         Section {
             ForEach(viewModel.dataSource) { rowViewModel in
