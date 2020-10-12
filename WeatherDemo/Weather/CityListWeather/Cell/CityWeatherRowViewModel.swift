@@ -3,11 +3,11 @@
 import Foundation
 import SwiftUI
 
-struct DailyWeatherRowViewModel: Identifiable {
+struct CityWeatherRowViewModel: Identifiable {
     private let item: WeatherItem
 
     var id: String {
-        day + temperature + title
+        item.name
     }
 
     var day: String {
@@ -16,6 +16,10 @@ struct DailyWeatherRowViewModel: Identifiable {
 
     var month: String {
         monthFormatter.string(from: item.date)
+    }
+
+    var humidity: String {
+        String(format: "%d", item.main.humidity)
     }
 
     var temperature: String {
@@ -39,8 +43,8 @@ struct DailyWeatherRowViewModel: Identifiable {
 
 // Used to hash on just the day in order to produce a single view model for each
 // day when there are multiple items per each day.
-extension DailyWeatherRowViewModel: Hashable {
-    static func == (lhs: DailyWeatherRowViewModel, rhs: DailyWeatherRowViewModel) -> Bool {
+extension CityWeatherRowViewModel: Hashable {
+    static func == (lhs: CityWeatherRowViewModel, rhs: CityWeatherRowViewModel) -> Bool {
         lhs.day == rhs.day
     }
 

@@ -18,12 +18,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         let fetcher = WeatherFetcher()
-        let viewModel = WeeklyWeatherViewModel(weatherFetcher: fetcher)
-        let weeklyView = WeeklyWeatherView(viewModel: viewModel)
+        let viewModel = CityListWeatherViewModel(weatherFetcher: fetcher)
+        let cityListView = CityListWeatherView(viewModel: viewModel)
+//        let viewModel = WeeklyWeatherViewModel(weatherFetcher: fetcher)
+//        let weeklyView = WeeklyWeatherView(viewModel: viewModel)
 
         // Use a UIHostingController as window root view controller
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = UIHostingController(rootView: weeklyView)
+        window.rootViewController = UIHostingController(rootView: cityListView)
         window.makeKeyAndVisible()
         self.window = window
     }

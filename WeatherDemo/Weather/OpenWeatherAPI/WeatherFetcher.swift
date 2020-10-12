@@ -10,6 +10,10 @@ protocol WeatherFetchable {
     func currentWeatherForecast(
         forCity city: String
     ) -> AnyPublisher<CurrentWeatherForecastResponse, WeatherError>
+
+    func nearbyCurrentWeatherForecast(
+        for lat: Double, lon: Double, count: Int
+    ) -> AnyPublisher<NearbyCitiesForeCastResponse, WeatherError>
 }
 
 class WeatherFetcher {
@@ -29,6 +33,10 @@ extension WeatherFetcher: WeatherFetchable {
         forecast(with: makeWeeklyForecastComponents(withCity: city))
     }
 
+    func nearbyCurrentWeatherForecast(for lat: Double, lon: Double, count: Int) -> AnyPublisher<NearbyCitiesForeCastResponse, WeatherError> {
+        forecast(with: makeNearbyForecastComponents(with: lat, lon: lon, count: count))
+    }
+
     func currentWeatherForecast(
         forCity city: String
     ) -> AnyPublisher<CurrentWeatherForecastResponse, WeatherError> {
@@ -42,7 +50,8 @@ extension WeatherFetcher: WeatherFetchable {
             let error = WeatherError.network(description: "Couldn't create URL")
             return Fail(error: error).eraseToAnyPublisher()
         }
-        return session.dataTaskPublisher(for: URLRequest(url: url))
+        let request = URLRequest(url: url)
+        return session.dataTaskPublisher(for: request)
             .mapError { error in
                 .network(description: error.localizedDescription)
             }
@@ -81,19 +90,19 @@ private extension WeatherFetcher {
         return components
     }
 
-    func makeCurrentDayForecastComponents(with lat: String, lon: String, count: String? = "10") -> URLComponents {
+    func makeNearbyForecastComponents(with lat: Double, lon: Double, count: Int) -> URLComponents {
         var components = URLComponents()
         components.scheme = OpenWeatherAPI.scheme
         components.host = OpenWeatherAPI.host
         components.path = OpenWeatherAPI.path + "/find"
 
         components.queryItems = [
-            URLQueryItem(name: "lat", value: lat),
-            URLQueryItem(name: "lon", value: lon),
-            URLQueryItem(name: "cnt", value: count),
+            URLQueryItem(name: "lat", value: "\(lat)"),
+            URLQueryItem(name: "lon", value: "\(lon)"),
+            URLQueryItem(name: "cnt", value: "\(count)"),
             URLQueryItem(name: "mode", value: "json"),
             URLQueryItem(name: "units", value: "metric"),
-            URLQueryItem(name: "APPID", value: OpenWeatherAPI.key),
+            URLQueryItem(name: "appid", value: OpenWeatherAPI.key),
         ]
 
         return components
