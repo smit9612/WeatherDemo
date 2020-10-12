@@ -18,51 +18,83 @@ struct NearbyCitiesForeCastResponse: Codable {
     var list: [WeatherItem]
 }
 
-struct WeatherItem: Codable {
-    let date: Date
-    let main: MainClass
-    let name: String?
-    let weather: [Weather]
+// MARK: - List
 
-    enum CodingKeys: String, CodingKey {
-        case date = "dt"
-        case main
-        case weather
-        case name
-    }
+struct WeatherItem: Codable {
+    var id: Int?
+    var name: String?
+    var coord: Coord?
+    var main: MainClass
+    var dt: Date
+    var wind: Wind?
+    var sys: Sys?
+    var rain: Rain?
+    var snow: Rain?
+    var clouds: Clouds?
+    var weather: [Weather]
 }
 
+// MARK: - Clouds
+
+struct Clouds: Codable {
+    var all: Int?
+}
+
+// MARK: - Coord
+
+struct Coord: Codable {
+    var lat, lon: Double
+}
+
+// MARK: - MainClass
+
 struct MainClass: Codable {
-    let temperature: Double
-    let humidity: Int
-    let maxTemperature: Double
-    let minTemperature: Double
+    var temperature, feelsLike, minTemperature, maxTemperature: Double
+    var pressure, humidity: Int
 
     enum CodingKeys: String, CodingKey {
         case temperature = "temp"
-        case humidity
-        case maxTemperature = "temp_max"
+        case feelsLike = "feels_like"
         case minTemperature = "temp_min"
+        case maxTemperature = "temp_max"
+        case pressure, humidity
     }
 }
 
-struct Weather: Codable {
-    let main: MainEnum
-    let weatherDescription: String
+// MARK: - Rain
+
+struct Rain: Codable {
+    var the1H: Double?
 
     enum CodingKeys: String, CodingKey {
-        case main
-        case weatherDescription = "description"
+        case the1H = "1h"
     }
 }
 
-enum MainEnum: String, Codable {
-    case clear = "Clear"
-    case clouds = "Clouds"
-    case rain = "Rain"
+// MARK: - Sys
+
+struct Sys: Codable {
+    var country: String?
 }
 
-struct Coord: Codable {
-    let lon: Double
-    let lat: Double
+// MARK: - Weather
+
+struct Weather: Codable {
+    var id: Int?
+    var main: String?
+    var weatherDescription: String
+    var icon: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, main
+        case weatherDescription = "description"
+        case icon
+    }
+}
+
+// MARK: - Wind
+
+struct Wind: Codable {
+    var speed: Double?
+    var deg: Int?
 }

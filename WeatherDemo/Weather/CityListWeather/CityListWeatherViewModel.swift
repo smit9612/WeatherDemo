@@ -17,18 +17,21 @@ final class CityListWeatherViewModel: ObservableObject {
 
     @ObservedObject var locationManager = LocationManager()
 
-    var userLatitude: Double {
-        (locationManager.lastLocation?.coordinate.latitude ?? 0.0).round(to: 2)
-    }
+    var userLatitude: Double = 43.65
+//    {
+//        (locationManager.lastLocation?.coordinate.latitude ?? 43.65).round(to: 2)
+//    }
 
-    var userLongitude: Double {
-        (locationManager.lastLocation?.coordinate.longitude ?? 0.0).round(to: 2)
-    }
+    var userLongitude: Double = -79.34
+//    {
+//        (locationManager.lastLocation?.coordinate.longitude ?? -79.34).round(to: 2)
+//    }
 
     var statusString: String {
         locationManager.statusString
     }
 
+    var count = 0
     private let weatherFetcher: WeatherFetchable
     private var disposables = Set<AnyCancellable>()
     let start = Date()
@@ -37,20 +40,22 @@ final class CityListWeatherViewModel: ObservableObject {
         scheduler _: DispatchQueue = DispatchQueue(label: "WeatherViewModel")
     ) {
         self.weatherFetcher = weatherFetcher
-        refresh()
-        startTimer()
+        locationManager.$lastLocation
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] location in
+                guard let self = self else { return }
+                self.userLatitude = (location?.coordinate.latitude ?? 0.0).round(to: 2)
+                self.userLongitude = (location?.coordinate.longitude ?? 0.0).round(to: 2)
+                self.refresh()
+                self.startTimer()
+            }
+            .store(in: &disposables)
     }
 
     // func get current location lat and long using combine
     func startTimer() {
-        Timer.publish(every: 60.0, on: .main, in: .common)
+        Timer.publish(every: 10.0, on: .main, in: .common)
             .autoconnect()
-            .map { output in
-                output.timeIntervalSince(self.start)
-            }
-            .map { timeInterval in
-                Int(timeInterval)
-            }
             .sink { [weak self] _ in
                 self?.refresh()
             }
@@ -64,7 +69,7 @@ final class CityListWeatherViewModel: ObservableObject {
 
     func fetchNearBy() {
         loading = true
-        weatherFetcher.nearbyCurrentWeatherForecast(for: 43.65, lon: -79.34, count: 10)
+        weatherFetcher.nearbyCurrentWeatherForecast(for: userLatitude, lon: userLongitude, count: 10)
             .map { response in
                 response.list.map(CityWeatherRowViewModel.init)
             }

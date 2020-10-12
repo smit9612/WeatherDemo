@@ -11,11 +11,11 @@ struct DailyWeatherRowViewModel: Identifiable {
     }
 
     var day: String {
-        dayFormatter.string(from: item.date)
+        dayFormatter.string(from: item.dt)
     }
 
     var month: String {
-        monthFormatter.string(from: item.date)
+        monthFormatter.string(from: item.dt)
     }
 
     var temperature: String {
@@ -23,7 +23,7 @@ struct DailyWeatherRowViewModel: Identifiable {
     }
 
     var title: String {
-        guard let title = item.weather.first?.main.rawValue else { return "" }
+        guard let title = item.weather.first?.main else { return "" }
         return title
     }
 

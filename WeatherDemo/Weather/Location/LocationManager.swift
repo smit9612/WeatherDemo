@@ -61,6 +61,16 @@ extension LocationManager: CLLocationManagerDelegate {
     }
 }
 
+extension CLLocation {
+    var latitude: Double {
+        coordinate.latitude
+    }
+
+    var longitude: Double {
+        coordinate.longitude
+    }
+}
+
 extension Double {
     func round(to places: Int) -> Double {
         let divisor = pow(10.0, Double(places))
