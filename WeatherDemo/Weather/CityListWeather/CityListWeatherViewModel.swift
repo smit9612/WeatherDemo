@@ -54,7 +54,7 @@ final class CityListWeatherViewModel: ObservableObject {
 
     // func get current location lat and long using combine
     func startTimer() {
-        Timer.publish(every: 10.0, on: .main, in: .common)
+        Timer.publish(every: 60.0, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 self?.refresh()
